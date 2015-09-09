@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+var TX = require("ethereumjs-tx")
+var ethutil = require("ethereumjs-util")
+
+var rawtx = new Buffer(ethutil.stripHexPrefix(process.argv[2]), 'hex') 
+var priv = new Buffer(ethutil.stripHexPrefix(process.argv[3]), 'hex') 
+
+var signedtx = new TX(rawtx)
+signedtx.sign(priv)
+console.log("0x" + signedtx.serialize().toString("hex"))

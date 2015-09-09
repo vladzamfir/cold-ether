@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+var rand = require("random-seed").create()
+var ethutil = require("ethereumjs-util")
+var fs = require("fs")
+
+rand.addEntropy(process.argv[2])
+
+var rBytes = new Buffer(32)
+for(var i = 0; i < 32; i++){
+  rBytes[i] = rand(256)
+}
+
+addr = "0x" + ethutil.privateToAddress(rBytes).toString('hex')
+priv = "0x" + rBytes.toString('hex')
+
+
+fs.writeFileSync(addr,priv)
+
+console.log("\n\naddress:\n" + addr)
+console.log("\n\nprivate key:\n" + priv + "\n\n")

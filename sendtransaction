@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+var web3 = require("web3")
+var rpc = 'http://localhost:8545'
+web3.setProvider(new web3.providers.HttpProvider(rpc));
+
+web3.eth.sendRawTransaction(process.argv[2])
+process.exit()
