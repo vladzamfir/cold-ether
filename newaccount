@@ -1,5 +1,12 @@
 #!/usr/bin/env node
 
+if(process.argv[2] === "help" || process.argv[2] === "--help" || process.argv[2] === "-h" || process.argv[2] === undefined ){
+	console.log("\nThis utility creates a new ethereum account")
+	console.log("It places the private key in a file named as the account number") 
+	console.log("\nusage: newaccount <facemash entropy>\n")
+	process.exit()
+}
+
 var rand = require("random-seed").create()
 var ethutil = require("ethereumjs-util")
 var fs = require("fs")

@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+
+if(process.argv[2] === "help" || process.argv[2] === "--help" || process.argv[2] === "-h" || process.argv[2] === undefined ){
+	console.log("\nThis utility signs an unsigned transaction\n\nusage: sign <rawTransaction> <privatekey>\n")
+	process.exit()
+}
+
 var TX = require("ethereumjs-tx")
 var ethutil = require("ethereumjs-util")
 
@@ -7,4 +13,5 @@ var priv = new Buffer(ethutil.stripHexPrefix(process.argv[3]), 'hex')
 
 var signedtx = new TX(rawtx)
 signedtx.sign(priv)
+
 console.log("0x" + signedtx.serialize().toString("hex"))
