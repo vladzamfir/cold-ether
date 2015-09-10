@@ -8,8 +8,8 @@ if(process.argv[2] === "help" || process.argv[2] === "--help" || process.argv[2]
 var TX = require("ethereumjs-tx")
 var ethutil = require("ethereumjs-util")
 
-var rawtx = new Buffer(ethutil.stripHexPrefix(process.argv[2]), 'hex') 
-var priv = new Buffer(ethutil.stripHexPrefix(process.argv[3]), 'hex') 
+var rawtx = process.argv[2]
+var priv = new Buffer(ethutil.stripHexPrefix(process.argv[3]), 'hex')
 
 var signedtx = new TX(rawtx)
 signedtx.sign(priv)
