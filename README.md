@@ -1,4 +1,4 @@
-# cold-cther
+# cold-ether
 
 ##Ethereum cold storage solution using nodejs
 
