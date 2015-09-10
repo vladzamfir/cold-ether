@@ -6,9 +6,7 @@
 ###Installation:
 
 ```
-git clone https://github.com/vladzamfir/Cold-Ether.git
-cd Cold-Ether
-npm install
+npm install cold-ether -g
 ```
 
 
