@@ -25,6 +25,7 @@ var tx = new TX()
 tx.nonce = nonce
 tx.to = receiver
 tx.value = amount
+tx.data = data
 tx.gasPrice = gasprice.toString(16)
 tx.gasLimit = tx.getBaseFee()
 
