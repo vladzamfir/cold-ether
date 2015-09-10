@@ -1,9 +1,9 @@
-# Cold-Ether
+# cold-cther
 
-Ethereum cold storage solution using nodejs
+##Ethereum cold storage solution using nodejs
 
 
-##Installation:
+###Installation:
 
 ```
 git clone https://github.com/vladzamfir/Cold-Ether.git
