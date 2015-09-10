@@ -13,6 +13,7 @@ npm install
 
 
 *packagetx* packages a raw unsigned ethereum transaction. 
+
 A local ethereum node with rpc enabled is used to set the transaction nonce.
 
 *newaccount* creates a new ethereum account
@@ -20,4 +21,5 @@ A local ethereum node with rpc enabled is used to set the transaction nonce.
 *sign* signs a raw unsigned transaction
 
 *sendtransaction* publishes a raw signed transaction. 
+
 A local ethereum node with rpc enabled is used to publish the transaction.
