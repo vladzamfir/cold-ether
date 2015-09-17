@@ -10,7 +10,8 @@
     "packagetx": "./packagetx",
     "newaccount": "./newaccount",
     "sign": "./sign",
-    "sentransaction":"./sendtransaction"
+    "sentransaction":"./sendtransaction",
+    "getbalance":"./getbalance"
   },
   "repository":{
     "type":"git",
