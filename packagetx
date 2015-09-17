@@ -8,6 +8,7 @@ web3.setProvider(new web3.providers.HttpProvider(rpc));
 if(process.argv[2] === "help" || process.argv[2] === "--help" || process.argv[2] === "-h" || process.argv[2] === undefined ){
 	console.log("\nThis utility packages an unsigned transaction")
 	console.log("The amount given to the transaction is denominated in ether")
+	console.log("Leaving \"all\" in the amount section will create a transaction that empties the account")
 	console.log("This requires running an ethereum node with rpc enabled at http://localhost:8545")
 	console.log("\nusage: packagetx <sender> <receiver> <amount> [<data>]\n")
 	process.exit()
@@ -24,9 +25,15 @@ var gasprice = web3.eth.gasPrice
 var nonce = web3.eth.getTransactionCount(sender)
 var tx = new TX()
 
+tx.nonce = nonce
+tx.to = receiver
+tx.data = data
+tx.gasPrice = gasprice.toString(16)
+tx.gasLimit = tx.getBaseFee()
+
 
 var amount
-if(process.argv[4] == "empty"){
+if(process.argv[4] == "all"){
 	amount = 0
 	balance = web3.eth.getBalance(sender)
 	txfee = tx.getUpfrontCost()
@@ -36,16 +43,10 @@ if(process.argv[4] == "empty"){
 	tx.value = amount
 }
 
-tx.nonce = nonce
-tx.to = receiver
-tx.data = data
-tx.gasPrice = gasprice.toString(16)
-tx.gasLimit = tx.getBaseFee()
-
 
   //-> the total amoutn needed in the account of the sender for the transaction to be valid
 if(tx.getUpfrontCost() > web3.eth.getBalance(sender)) {
-	consol.log("\n Warning: your account appears to have insufficient funds to send this transaction.\n")
+	console.log("\n Warning: your account appears to have insufficient funds to send this transaction.\n")
 }
 
 
