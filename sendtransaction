@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
+var web3 = require("web3")
+var rpc = 'http://localhost:8545'
+web3.setProvider(new web3.providers.HttpProvider(rpc));
+
 if(process.argv[2] === "help" || process.argv[2] === "--help" || process.argv[2] === "-h" || process.argv[2] === undefined ){
 	console.log("\nThis utility publishes a raw transaction")
 	console.log("This requires running an ethereum node with rpc enabled at http://localhost:8545")
 	console.log("\nusage: sendtransaction <rawTransaction>\n")
 	process.exit()
 }
-
-var web3 = require("web3")
-var rpc = 'http://localhost:8545'
-web3.setProvider(new web3.providers.HttpProvider(rpc));
 
 web3.eth.sendRawTransaction(process.argv[2])
 process.exit()

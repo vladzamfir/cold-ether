@@ -2,6 +2,8 @@
 var web3 = require("web3")
 var TX = require("ethereumjs-tx")
 var rpc = 'http://localhost:8545'
+web3.setProvider(new web3.providers.HttpProvider(rpc));
+
 
 if(process.argv[2] === "help" || process.argv[2] === "--help" || process.argv[2] === "-h" || process.argv[2] === undefined ){
 	console.log("\nThis utility packages an unsigned transaction")
@@ -13,7 +15,6 @@ if(process.argv[2] === "help" || process.argv[2] === "--help" || process.argv[2]
 
 
 
-web3.setProvider(new web3.providers.HttpProvider(rpc));
 
 
 var sender = process.argv[2]
