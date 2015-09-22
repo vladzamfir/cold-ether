@@ -2,6 +2,7 @@
 var web3 = require("web3")
 var TX = require("ethereumjs-tx")
 var rpc = 'http://localhost:8545'
+var BN = require("bn.js")
 web3.setProvider(new web3.providers.HttpProvider(rpc));
 
 
@@ -30,10 +31,11 @@ tx.gasPrice = gasprice.toString(16)
 tx.gasLimit = tx.getBaseFee()
 
 balance = web3.eth.getBalance(sender)
+balance = new BN(balance.toString())
 txfee = tx.getUpfrontCost()
 
 
-if(balance.cmp(txfee) >= 0) {
+if(txfee.cmp(balance) > 0) {
 	console.log("\n Your account has insufficient balance to send the balance.\n")
 	process.exit()
 }
