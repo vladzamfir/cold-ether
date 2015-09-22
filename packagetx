@@ -15,13 +15,11 @@ if(process.argv[2] === "help" || process.argv[2] === "--help" || process.argv[2]
 }
 
 
-
-
-
 var sender = process.argv[2]
 var receiver = process.argv[3]
 var data = process.argv[5]
 var gasprice = web3.eth.gasPrice
+console.log("gasprice: " + gasprice)
 var nonce = web3.eth.getTransactionCount(sender)
 var tx = new TX()
 
@@ -31,30 +29,20 @@ tx.data = data
 tx.gasPrice = gasprice.toString(16)
 tx.gasLimit = tx.getBaseFee()
 
+balance = web3.eth.getBalance(sender)
+txfee = tx.getUpfrontCost()
 
-var amount
+
+if(balance.cmp(txfee) >= 0) {
+	console.log("\n Your account has insufficient balance to send the balance.\n")
+	process.exit()
+}
+
 if(process.argv[4] == "all"){
-	amount = 0
-	balance = web3.eth.getBalance(sender)
-	txfee = tx.getUpfrontCost()
-	if(txfee > balance) {
-		console.log("\n Your account has insufficient balance to send the balance.\n")
-		process.exit()
-	} else {
-		tx.value = balance - txfee
-	}
-	
+	tx.value = balance - txfee
 } else {
-	amount = web3.toWei(process.argv[4],"ether")
-	tx.value = amount
+	tx.value = web3.toWei(process.argv[4],"ether")
 }
-
-
-  //-> the total amoutn needed in the account of the sender for the transaction to be valid
-if(tx.getUpfrontCost() > web3.eth.getBalance(sender)) {
-	console.log("\n Warning: your account appears to have insufficient funds to send this transaction.\n")
-}
-
 
 console.log("0x" + tx.serialize().toString("hex"))
 process.exit()
