@@ -1,6 +1,6 @@
 {
   "name": "cold-ether",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "ether cold storage scripts",
   "main": "index.js",
   "scripts": {

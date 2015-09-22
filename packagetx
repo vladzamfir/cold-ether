@@ -37,7 +37,13 @@ if(process.argv[4] == "all"){
 	amount = 0
 	balance = web3.eth.getBalance(sender)
 	txfee = tx.getUpfrontCost()
-	tx.value = balance - txfee
+	if(txfee > balance) {
+		console.log("\n Your account has insufficient balance to send the balance.\n")
+		process.exit()
+	} else {
+		tx.value = balance - txfee
+	}
+	
 } else {
 	amount = web3.toWei(process.argv[4],"ether")
 	tx.value = amount
