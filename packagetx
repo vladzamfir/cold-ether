@@ -20,7 +20,6 @@ var sender = process.argv[2]
 var receiver = process.argv[3]
 var data = process.argv[5]
 var gasprice = web3.eth.gasPrice
-console.log("gasprice: " + gasprice)
 var nonce = web3.eth.getTransactionCount(sender)
 var tx = new TX()
 
