@@ -21,3 +21,6 @@ A local ethereum node with rpc enabled is used to set the transaction nonce.
 *sendtransaction* publishes a raw signed transaction. 
 
 A local ethereum node with rpc enabled is used to publish the transaction.
+ 
+# This software has only been tested by myself - it comes "as is" without any guarantees
+# I will not be liable you lose your ether due to this software
