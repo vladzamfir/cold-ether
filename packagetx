@@ -26,16 +26,18 @@ var tx = new TX()
 tx.nonce = nonce
 tx.to = receiver
 tx.data = data
-tx.gasPrice = gasprice.toString(16)
+tx.gasPrice = '0x' + web3.eth.gasPrice.toString(16)
 tx.gasLimit = tx.getBaseFee()
 
-balance = web3.eth.getBalance(sender)
-balance = new BN(balance.toString())
-txfee = tx.getUpfrontCost()
+balance = web3.fromWei(web3.eth.getBalance(sender), "Wei")
+balance = new BN(balance.toString(10))
 
+txfee = tx.getUpfrontCost()
 
 if(txfee.cmp(balance) > 0) {
 	console.log("\n Your account has insufficient balance to send the balance.\n")
+	console.log(balance.toString(10))
+	console.log(txfee.toString(10))
 	process.exit()
 }
 
