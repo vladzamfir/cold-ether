@@ -44,8 +44,6 @@ if(txfee.cmp(balance) > 0) {
 	process.exit()
 }
 
-console.log("BALANCE:\n")
-console.log(balance)
 if(process.argv[4] == "all"){
 	tx.value = balance - txfee
 } else {
