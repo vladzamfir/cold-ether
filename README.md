@@ -1,7 +1,6 @@
 # cold-ether
 
-#This software does not work
-#Do not use this software
+#This software seems to work - it's not very tested though!
 
 ##Ethereum cold storage solution using nodejs
 
