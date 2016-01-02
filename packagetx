@@ -29,23 +29,32 @@ tx.data = data
 tx.gasPrice = '0x' + web3.eth.gasPrice.toString(16)
 tx.gasLimit = tx.getBaseFee()
 
-balance = web3.fromWei(web3.eth.getBalance(sender), "Wei")
+balance = web3.eth.getBalance(sender)
 balance = new BN(balance.toString(10))
 
 txfee = tx.getUpfrontCost()
 
 if(txfee.cmp(balance) > 0) {
-	console.log("\n Your account has insufficient balance to send the balance.\n")
+	console.log("\n\n Your account has insufficient balance to send the balance.\n")
+
+	console.log("\nBalance in Wei:")
 	console.log(balance.toString(10))
+	console.log("\nRequired fee in Wei:")
 	console.log(txfee.toString(10))
 	process.exit()
 }
 
+console.log("BALANCE:\n")
+console.log(balance)
 if(process.argv[4] == "all"){
 	tx.value = balance - txfee
 } else {
-	tx.value = web3.toWei(process.argv[4],"ether")
+	tx.value = new BN(web3.toWei(process.argv[4],"ether").toString())
 }
 
-console.log("0x" + tx.serialize().toString("hex"))
+console.log("\n\nJSON of the unsigned transaction:\n")
+console.log( tx.toJSON(true) )
+
+console.log("\n\nraw unsigned transaction:\n")
+console.log("0x" + tx.serialize().toString("hex") + "\n\n")
 process.exit()
