@@ -5,54 +5,100 @@ var rpc = 'http://localhost:8545'
 var BN = require("bn.js")
 web3.setProvider(new web3.providers.HttpProvider(rpc));
 
-
 if(process.argv[2] === "help" || process.argv[2] === "--help" || process.argv[2] === "-h" || process.argv[2] === undefined ){
-	console.log("\nThis utility packages an unsigned transaction")
-	console.log("The amount given to the transaction is denominated in ether")
-	console.log("Leaving \"all\" in the amount section will create a transaction that empties the account")
-	console.log("This requires running an ethereum node with rpc enabled at http://localhost:8545")
-	console.log("\nusage: packagetx <sender> <receiver> <amount> [<data>]\n")
+	console.log("\n\nThis utility packages an unsigned transaction")
+	console.log("It requires running an ethereum node with rpc enabled at http://localhost:8545")
+
+	console.log("\nusage: packagetx <sender> <receiver> <amount> [<data>] [<gaslimit>]\n")
+
+	console.log("The \"amount\" of cryptoocurrency being sent is denominated in WEI")
+	console.log("Recall that 1 ETH = 1000000000000000000 WEI\n")
+	console.log("The \"gaslimit\" should be given manually when the transaction destination is a smart contract")
+	console.log("The \"data\" should be provided in hex with an \"0x\" prefix")
+	console.log("Leaving \"all\" in the amount section will create a transaction that empties the account\n")
+	console.log("Setting the gaslimit and using \"all\" command sends the balance - gaslimit*gasprice ")
 	process.exit()
 }
 
-
-var sender = process.argv[2]
-var receiver = process.argv[3]
-var data = process.argv[5]
-var gasprice = web3.eth.gasPrice
-var nonce = web3.eth.getTransactionCount(sender)
+//Lets get this party started..
 var tx = new TX()
 
+//This converts the upper case characters of "checksummed" eth addresses to the lowercase format 
+String.prototype.toProperCase = function () {
+    return this.replace(/\w\S*/g, function(txt){return txt.substr(0).toLowerCase();});
+};
+
+
+//setting dat nonce - should be called a sequence number
+var sender = process.argv[2].toProperCase() 
+var nonce = web3.eth.getTransactionCount(sender)
 tx.nonce = nonce
+
+//set the receiver address
+var receiver = process.argv[3].toProperCase()
 tx.to = receiver
+
+//set transaction data
+var data = process.argv[5]
 tx.data = data
-tx.gasPrice = '0x' + web3.eth.gasPrice.toString(16)
-tx.gasLimit = tx.getBaseFee()
 
-balance = web3.eth.getBalance(sender)
-balance = new BN(balance.toString(10))
+//set the gasprice
+var gasprice = web3.eth.gasPrice
+tx.gasPrice = new BN(web3.eth.gasPrice.toString())
 
-txfee = tx.getUpfrontCost()
-
-if(txfee.cmp(balance) > 0) {
-	console.log("\n\n Your account has insufficient balance to send the balance.\n")
-
-	console.log("\nBalance in Wei:")
-	console.log(balance.toString(10))
-	console.log("\nRequired fee in Wei:")
-	console.log(txfee.toString(10))
-	process.exit()
-}
-
-if(process.argv[4] == "all"){
-	tx.value = balance - txfee
+//set the gas limit
+if (process.argv[6]){
+	tx.gasLimit = new BN(process.argv[6])
 } else {
-	tx.value = new BN(web3.toWei(process.argv[4],"ether").toString())
+	tx.gasLimit = tx.getBaseFee()
 }
 
+
+console.log("tx.getBaseFee():")
+console.log(tx.getBaseFee())
+
+//Getting the balance to support "send all", and to check sufficient balance
+balance = web3.eth.getBalance(sender)
+balance = new BN((balance.toString()))
+
+//the transaction fee 
+var txfee = tx.getUpfrontCost()
+//console.log("txfee:")
+//console.log(txfee)
+
+//Set the value (in wei) of the cryptocurrency payload of the transaction
+var val = new BN()
+if (process.argv[4] == "all"){
+	val = balance.sub(txfee)
+} else {
+	val = new BN(process.argv[4])
+}
+tx.value = val
+
+
+//the gas cost of the tx, so we can check if we've allocated enough gas to execute the transaction
+var balRequired = new BN(0)
+balRequired = val.add(txfee)
+//console.log("balRequired:")
+//console.log(balRequired)
+
+
+//provide a report of the transaction information
 console.log("\n\nJSON of the unsigned transaction:\n")
 console.log( tx.toJSON(true) )
 
 console.log("\n\nraw unsigned transaction:\n")
 console.log("0x" + tx.serialize().toString("hex") + "\n\n")
+
+
+if(balRequired.cmp(balance) > 0) {
+	console.log("\n\nYour account has insufficient balance to send the balance.\n")
+	console.log("\nBalance:")
+	console.log(balance.toString(10))
+	console.log("\nRequired balance:")
+	console.log(balRequired.toString(10))
+	console.log("\nDifference balance in Wei:")
+	console.log(balRequired.sub(balance).toString())
+}
+
 process.exit()
