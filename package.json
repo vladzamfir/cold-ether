@@ -1,6 +1,6 @@
 {
   "name": "cold-ether",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "ether cold storage scripts",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,8 @@
     "newaccount": "./newaccount",
     "sign": "./sign",
     "sendtransaction": "./sendtransaction",
-    "getbalance": "./getbalance"
+    "getbalance": "./getbalance",
+    "encodeABIcall": "./encodeABIcall"
   },
   "repository": {
     "type": "git",

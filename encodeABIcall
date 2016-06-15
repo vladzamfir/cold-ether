@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+var ethutil = require("ethereumjs-util")
+var BN = require("bn.js")
+
+if(process.argv[2] === "help" || process.argv[2] === "--help" || process.argv[2] === "-h" || process.argv[2] === undefined ){
+     console.log("\nusage: getcalldata <function signature typedef> <parameters-list>");
+     console.log("\n    e.g. getcalldata \"baz(uint32,bool)\" 12 1")
+     console.log("\nIf this works, it works only for static types")
+     console.log("\n")
+     process.exit();
+}
+
+//----------------------------Functions----------------------------------
+
+padLeft = function(n, width, z) {
+	z = z || '0';
+	n = n + '';
+	return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
+//----------------------------Make call data----------------------------------
+
+var funcode = "0x" + ethutil.sha3(process.argv[2]).toString('hex').substr(0,8);
+
+var params = funcode;  //save the function code as first parameter (without padding)
+console.log("\nThe function selector is: " + funcode + "\n"); 
+
+//I should make sure that this code works regardless of the type of function parameter
+for(var i=3; i<process.argv.length; i++) {
+
+      var p = padLeft(new BN(process.argv[i]).toString(16), 64);
+      params += p;
+
+      console.log("Adding encoded parameter ---->  " + p);
+
+}
+
+console.log("\nThe txdata required to make this call is:\n")
+console.log(params)
+console.log("\n")
+
+process.exit()
